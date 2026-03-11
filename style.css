@@ -664,6 +664,33 @@ tbody tr:last-child td {
     opacity: 0.7;
 }
 
+/* Excel Export Button */
+.export-btn {
+    background-color: #16A34A; /* Emerald Green */
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: var(--transition-normal);
+    box-shadow: 0 2px 4px rgba(22, 163, 74, 0.2);
+}
+
+.export-btn:hover {
+    background-color: #15803D;
+    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+    transform: translateY(-2px);
+}
+
+.export-btn:active {
+    transform: translateY(0);
+}
+
 /* -------------------------------------
  *  STATES & UTILITIES
  * ------------------------------------- */

@@ -10,6 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SheetJS (Excel Export) -->
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css?v=3">
 </head>
@@ -303,6 +305,36 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Teacher Excel Export Section -->
+                    <div style="margin-top: 40px; border-top: 1px solid var(--border-light); padding-top: 24px;" id="teacher-performance-section" class="hidden">
+                        <div class="table-header">
+                            <h2 style="font-size: 18px;"><i class="fa-solid fa-ranking-star" style="color: #F59E0B; margin-right: 8px;"></i> Öğretmen Performans Tablosu</h2>
+                            <div class="table-actions">
+                                <button id="export-excel-btn" class="export-btn" title="Excel Olarak İndir">
+                                    <i class="fa-solid fa-file-excel"></i> Excel İndir
+                                </button>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table" id="teacher-performance-table">
+                                <thead>
+                                    <tr>
+                                        <th>Öğretmen Adı</th>
+                                        <th>Toplam G.</th>
+                                        <th>Farklı Öğrenci</th>
+                                        <th>Yüzyüze</th>
+                                        <th>Telefon</th>
+                                        <th>WhatsApp</th>
+                                        <th>Öğretmen G.</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="teacher-performance-body">
+                                    <!-- Populated via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </section>
             </div>
 
@@ -471,6 +503,6 @@
     </div>
 
     <!-- Application Script -->
-    <script src="app.js?v=3"></script>
+    <script src="app.js?v=8"></script>
 </body>
 </html>
