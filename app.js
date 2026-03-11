@@ -1238,9 +1238,36 @@ function initNativeForm() {
     
     const submitForm = () => {
         newBtnNext.disabled = true;
-        newBtnNext.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Kaydediliyor...';
+        newBtnNext.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Buluta Gönderiliyor...';
         
-        setTimeout(() => {
+        // Google Form URL (Action)
+        const formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSdLGM1U1XAHAUYz7XE67_XdpLXjvX96bVQVTpnXAEqo26C_Fw/formResponse';
+        
+        // Prepare Form Data with exact entry IDs
+        // Entry IDs extracted from the user's form:
+        // entry.974051061 = Öğretmen
+        // entry.1593457116 = Öğrenci
+        // entry.731883738 = Kimle Görüşüldü
+        // entry.1073634912 = Nasıl Görüşüldü
+        // entry.1722173290 = Ne Konuşuldu
+        
+        const params = new URLSearchParams();
+        params.append('entry.974051061', formState.teacher || ''); 
+        params.append('entry.1593457116', formState.student || '');
+        params.append('entry.731883738', formState.meetingWith || '');
+        params.append('entry.1073634912', formState.meetingHow || '');
+        params.append('entry.1722173290', formState.notes || '');
+
+        // Use fetch with no-cors to silently post to Google Forms
+        fetch(formUrl, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: params.toString()
+        }).then(() => {
+            // Also add mock record to UI instantly so user doesn't have to wait for sync
             const mockRecord = {
                 id: 'mock_' + Date.now(),
                 timestamp: new Date().toLocaleString('tr-TR'),
@@ -1252,22 +1279,28 @@ function initNativeForm() {
                 notes: formState.notes,
                 month: new Date(formState.date).toLocaleString('tr-TR', { month: 'long' })
             };
-            
             mockRecord.month = mockRecord.month.charAt(0).toUpperCase() + mockRecord.month.slice(1);
             appData.unshift(mockRecord);
             applyFilters();
             
+            // Show Success UI
             formAlert.classList.remove('hidden');
             formAlert.style.cssText = `background: #ECFDF5; border: 1px solid #A7F3D0; color: #065F46; padding: 16px; border-radius: 8px; margin-bottom: 24px; font-size: 14px; display: flex; align-items: center; gap: 12px;`;
-            formAlert.innerHTML = `<i class="fa-solid fa-circle-check" style="font-size: 20px;"></i> Başarıyla kaydedildi! Öğrenci görüşmesi listeye eklendi.`;
+            formAlert.innerHTML = `<i class="fa-solid fa-circle-check" style="color: #10B981; font-size: 20px;"></i> Başarıyla kaydedildi! Veriler gerçek tabloya aktarıldı.`;
             
             setTimeout(() => {
                 formAlert.classList.add('hidden');
                 document.querySelector('.menu-item[data-tab="dashboard"]').click();
                 initNativeForm();
-            }, 2500);
-            
-        }, 1200);
+            }, 3000);
+        }).catch(err => {
+            console.error("Form Gönderim Hatası:", err);
+            newBtnNext.disabled = false;
+            newBtnNext.innerHTML = 'Tekrar Dene';
+            formAlert.classList.remove('hidden');
+            formAlert.style.cssText = `background: #FEF2F2; border: 1px solid #FECACA; color: #DC2626; padding: 16px; border-radius: 8px; margin-bottom: 24px; font-size: 14px; display: flex; align-items: center; gap: 12px;`;
+            formAlert.innerHTML = `<i class="fa-solid fa-circle-xmark" style="color: #EF4444; font-size: 20px;"></i> Bağlantı hatası oluştu, veriler kaydedilemedi.`;
+        });
     };
 
     updateUI();
