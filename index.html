@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Öğrenci Takip Sistemi</title>
+    <!-- Modern Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css?v=3">
+</head>
+<body>
+    <div class="app-container">
+        
+        <!-- Sidebar / Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <span>EğitimTakip</span>
+                </div>
+            </div>
+            
+            <div class="sidebar-menu">
+                <a href="#" class="menu-item active" data-tab="dashboard">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="menu-item" data-tab="students">
+                    <i class="fa-solid fa-users"></i>
+                    <span>Öğrenciler</span>
+                </a>
+                <a href="#" class="menu-item" data-tab="performance" id="nav-performance">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Performans</span>
+                </a>
+                <a href="#" class="menu-item" id="nav-uncontacted" data-tab="uncontacted" style="display: none;">
+                    <i class="fa-solid fa-triangle-exclamation" style="color: #EF4444;"></i>
+                    <span style="color: #EF4444;">İletişimsizler</span>
+                </a>
+                <a href="#" class="menu-item" id="nav-data-management" data-tab="data-management" style="margin-top: 20px; border-top: 1px solid var(--border-light); padding-top: 16px; display: none;">
+                    <i class="fa-solid fa-database" style="color: var(--primary);"></i>
+                    <span style="color: var(--primary); font-weight: 600;">Veri Yönetimi</span>
+                </a>
+                <a href="#" class="menu-item menu-item-primary" id="nav-add-record" data-tab="add-record" style="margin-top: 20px; border-top: 1px solid var(--border-light); padding-top: 16px;">
+                    <i class="fa-solid fa-plus"></i>
+                    <span style="font-weight: 600;">Yeni Kayıt Ekle (Form)</span>
+                </a>
+                <a href="https://docs.google.com/spreadsheets/d/1lnoyBfXQnMyhiVGl36U4K3Pp6JWk6iJLESY9tCJyzZk/edit?gid=1820372447#gid=1820372447" target="_blank" class="menu-item" style="color: #F59E0B; margin-top: 8px;">
+                    <i class="fa-regular fa-calendar-days"></i>
+                    <span style="font-weight: 600;">Ders Programı</span>
+                </a>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="user-info" id="current-role-display" style="cursor: pointer;" title="Rol Değiştir">
+                    <div class="avatar" id="role-avatar">
+                        <i class="fa-solid fa-user-shield"></i>
+                    </div>
+                    <div class="details">
+                        <span class="name" id="role-name">Yönetici Paneli</span>
+                        <span class="role" id="role-type">Admin | Tüm Veriler</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Mobile Top Bar (Visible only on mobile) -->
+        <div class="mobile-app-bar">
+            <div class="logo" id="mobile-home-btn" style="cursor: pointer;">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <span style="font-size: 18px;">EğitimTakip</span>
+            </div>
+            <div class="mobile-user-profile" id="mobile-user-profile" style="cursor: pointer;">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <!-- Mobile Home Menu Tab -->
+            <div class="mobile-home-area tab-content hidden" id="tab-mobile-home">
+                <div class="mobile-grid-container">
+                    <div class="mobile-grid-item tab-trigger item-blue" data-tab="dashboard">
+                        <div class="icon-wrapper"><i class="fa-solid fa-list-check"></i></div>
+                        <h3>Görüşme<br>Kayıtları</h3>
+                    </div>
+                    <div class="mobile-grid-item tab-trigger item-emerald" data-tab="students">
+                        <div class="icon-wrapper"><i class="fa-solid fa-users-viewfinder"></i></div>
+                        <h3>Tüm<br>Öğrenciler</h3>
+                    </div>
+                    <div class="mobile-grid-item tab-trigger item-violet" data-tab="performance">
+                        <div class="icon-wrapper"><i class="fa-solid fa-chart-pie"></i></div>
+                        <h3>Performans<br>İstatistikleri</h3>
+                    </div>
+                    <div class="mobile-grid-item tab-trigger item-rose" data-tab="add-record">
+                        <div class="icon-wrapper"><i class="fa-solid fa-circle-plus"></i></div>
+                        <h3>Yeni Görüşme<br>Ekle</h3>
+                    </div>
+                    <a href="https://docs.google.com/spreadsheets/d/1lnoyBfXQnMyhiVGl36U4K3Pp6JWk6iJLESY9tCJyzZk/edit?gid=1820372447#gid=1820372447" target="_blank" class="mobile-grid-item item-orange" style="text-decoration: none; display: flex;">
+                        <div class="icon-wrapper"><i class="fa-regular fa-calendar-days"></i></div>
+                        <h3>Ders<br>Programı</h3>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Global Controls: Search & Filters (Visible on all tabs) -->
+            <section class="controls-section glass-panel" id="global-filters" style="margin-bottom: 24px;">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="search-input" placeholder="Öğrenci, öğretmen veya konu ara...">
+                </div>
+                
+                <div class="filters">
+                    <div class="filter-group">
+                        <label for="month-filter"><i class="fa-regular fa-calendar"></i> Ay</label>
+                        <select id="month-filter">
+                            <option value="all">Tümü</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="teacher-filter"><i class="fa-solid fa-person-chalkboard"></i> Öğretmen</label>
+                        <select id="teacher-filter">
+                            <option value="all">Tümü</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-area tab-content active" id="tab-dashboard">
+                <!-- Status & Loading -->
+                <div id="loading-spinner" class="loader-container">
+                    <div class="spinner"></div>
+                    <p>Veriler Google Sheets'ten yükleniyor...</p>
+                </div>
+                
+                <div id="error-message" class="error-container hidden">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <p>Veri yüklenirken bir hata oluştu. Lütfen bağlantınızı kontrol edin.</p>
+                </div>
+
+                <!-- Data Table View -->
+                <section class="data-section glass-panel hidden" id="data-container">
+                    <div class="table-header">
+                        <h2>Görüşme Kayıtları</h2>
+                        <div class="table-actions">
+                            <button id="refresh-btn" class="icon-btn" title="Yenile">
+                                <i class="fa-solid fa-rotate-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table id="records-table">
+                            <thead>
+                                <tr>
+                                    <th>Tarih</th>
+                                    <th>Öğrenci</th>
+                                    <th>Öğretmen</th>
+                                    <th>Görüşülen Kişi</th>
+                                    <th>İletişim Yolu</th>
+                                    <th>Açıklama</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body">
+                                <!-- Data will be populated here via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="pagination empty-state hidden" id="no-results-state">
+                        <i class="fa-solid fa-folder-open"></i>
+                        <p>Arama kriterlerinize uygun kayıt bulunamadı.</p>
+                    </div>
+                </section>
+            </div>
+            
+            <!-- Uncontacted Students Content (Admin Only) -->
+            <div class="dashboard-area tab-content hidden" id="tab-uncontacted">
+                <section class="data-section glass-panel" style="margin-top: 0;">
+                    <div class="table-header">
+                        <h2><i class="fa-solid fa-triangle-exclamation" style="color: #EF4444;"></i> İletişim Kurulmayan Öğrenciler (Seçili Ay)</h2>
+                        <div class="table-actions">
+                            <span style="font-size: 13px; color: var(--text-secondary);">Bu liste filtrelenen ay içinde hakkında veri girilmemiş öğrencileri gösterir.</span>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Öğrenci Adı</th>
+                                    <th style="width: 120px;">Durum</th>
+                                </tr>
+                            </thead>
+                            <tbody id="uncontacted-table-body">
+                                <tr><td colspan="2" style="text-align:center;">Hesaplanıyor...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+            
+            <!-- Students Content -->
+            <div class="dashboard-area tab-content hidden" id="tab-students">
+                <section class="data-section glass-panel" style="margin-top: 0;">
+                    <div class="table-header">
+                        <h2>Tüm Öğrenciler</h2>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Öğrenci Adı</th>
+                                    <th>Toplam Görüşme</th>
+                                    <th>Son Görüşme</th>
+                                    <th>Görüşen Öğretmenler</th>
+                                </tr>
+                            </thead>
+                            <tbody id="students-table-body"></tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Performance Content (Moved Stats) -->
+            <div class="dashboard-area tab-content hidden" id="tab-performance">
+                <section class="data-section glass-panel" style="margin-top: 0;">
+                    <div class="table-header">
+                        <h2>Performans İstatistikleri</h2>
+                    </div>
+                    
+                    <div class="stats-container performance-stats-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; width: 100%; padding: 16px 0;">
+                        <!-- Card 1: Toplam -->
+                        <div class="stat-card perf-card" style="min-width: unset; flex-direction: column; align-items: stretch; gap: 8px; padding: 24px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div class="stat-icon" style="background: #EFF6FF; color: #3B82F6; width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px;"><i class="fa-solid fa-file-lines"></i></div>
+                                    <span class="stat-label always-visible" style="font-weight: 600; font-size: 14px; color: var(--text-primary); margin-left: 0; max-width: 100%; opacity: 1;">Toplam Görüşme</span>
+                                </div>
+                                <h3 class="stat-value" id="stat-1-text" style="font-size: 26px; color: var(--primary);">0</h3>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Unique -->
+                        <div class="stat-card perf-card" style="min-width: unset; flex-direction: column; align-items: stretch; gap: 8px; padding: 24px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div class="stat-icon" style="background: #ECFDF5; color: #10B981; width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px;"><i class="fa-solid fa-users"></i></div>
+                                    <span class="stat-label always-visible" style="font-weight: 600; font-size: 14px; color: var(--text-primary); margin-left: 0; max-width: 100%; opacity: 1;">Farklı Öğrenci</span>
+                                </div>
+                                <h3 class="stat-value" id="stat-2-text" style="font-size: 26px; color: #10B981;">0</h3>
+                            </div>
+                        </div>
+
+                        <!-- Card 3: Teacher -->
+                        <div class="stat-card perf-card" style="min-width: unset; flex-direction: column; align-items: stretch; gap: 8px; padding: 24px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div class="stat-icon" style="background: #FEF3C7; color: #F59E0B; width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px;"><i class="fa-solid fa-chalkboard-user"></i></div>
+                                    <span class="stat-label always-visible" style="font-weight: 600; font-size: 14px; color: var(--text-primary); margin-left: 0; max-width: 100%; opacity: 1;">Öğretmen Görüşmesi</span>
+                                </div>
+                                <h3 class="stat-value" id="stat-3-text" style="font-size: 26px; color: #F59E0B;">0</h3>
+                            </div>
+                        </div>
+
+                        <!-- Card 4: Face-to-Face -->
+                        <div class="stat-card perf-card" style="min-width: unset; flex-direction: column; align-items: stretch; gap: 8px; padding: 24px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div class="stat-icon" style="background: #F3E8FF; color: #9333EA; width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px;"><i class="fa-solid fa-handshake"></i></div>
+                                    <span class="stat-label always-visible" style="font-weight: 600; font-size: 14px; color: var(--text-primary); margin-left: 0; max-width: 100%; opacity: 1;">Yüzyüze</span>
+                                </div>
+                                <h3 class="stat-value" id="stat-4-text" style="font-size: 26px; color: #9333EA;">0</h3>
+                            </div>
+                        </div>
+
+                        <!-- Card 5: Phone -->
+                        <div class="stat-card perf-card" style="min-width: unset; flex-direction: column; align-items: stretch; gap: 8px; padding: 24px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div class="stat-icon" style="background: #FEF2F2; color: #EF4444; width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px;"><i class="fa-solid fa-phone"></i></div>
+                                    <span class="stat-label always-visible" style="font-weight: 600; font-size: 14px; color: var(--text-primary); margin-left: 0; max-width: 100%; opacity: 1;">Telefon</span>
+                                </div>
+                                <h3 class="stat-value" id="stat-5-text" style="font-size: 26px; color: #EF4444;">0</h3>
+                            </div>
+                        </div>
+
+                        <!-- Card 6: Whatsapp / SMS -->
+                        <div class="stat-card perf-card" style="min-width: unset; flex-direction: column; align-items: stretch; gap: 8px; padding: 24px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div class="stat-icon" style="background: #DCFCE7; color: #22C55E; width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px;"><i class="fa-brands fa-whatsapp"></i></div>
+                                    <span class="stat-label always-visible" style="font-weight: 600; font-size: 14px; color: var(--text-primary); margin-left: 0; max-width: 100%; opacity: 1;">WhatsApp/SMS</span>
+                                </div>
+                                <h3 class="stat-value" id="stat-6-text" style="font-size: 26px; color: #22C55E;">0</h3>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Add Record Content (Native Form) -->
+            <div class="dashboard-area tab-content hidden" id="tab-add-record">
+                <section class="data-section glass-panel native-form-container" style="margin-top: 24px; padding: 32px; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto; min-height: 400px; border-radius: 12px; box-shadow: var(--shadow-lg);">
+                    
+                    <div class="card-title" id="form-title" style="font-size: 20px; font-weight: 700; color: var(--primary); margin-bottom: 24px;">+ Yeni Görüşme Ekle</div>
+                    
+                    <!-- Alert Message Area -->
+                    <div id="form-alert" class="alert hidden"></div>
+
+                    <!-- Setup Progress/Step Bar -->
+                    <div class="step-bar" id="form-step-bar" style="display: flex; padding: 16px 0 24px; gap: 8px;">
+                        <!-- Auto-Generated via JS -->
+                    </div>
+
+                    <!-- Step 1: Date & Teacher -->
+                    <div class="form-step active" id="form-step-1">
+                        <div class="field" style="margin-bottom: 20px;">
+                            <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">Görüşme Tarihi</label>
+                            <select id="fDate" style="width: 100%; padding: 12px 16px; border-radius: 8px; border: 1px solid var(--border-light); font-size: 15px; outline: none; transition: border-color 0.2s; background: var(--bg-primary);"></select>
+                        </div>
+                        <div class="field" style="margin-bottom: 20px;">
+                            <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">Öğretmen</label>
+                            <input type="text" id="fTeacher" disabled style="width: 100%; padding: 12px 16px; border-radius: 8px; border: 1px solid var(--border-light); font-size: 15px; outline: none; background: #E2E8F0; color: var(--text-secondary); cursor: not-allowed;" value="">
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Student Selection -->
+                    <div class="form-step hidden" id="form-step-2">
+                        <div class="field" style="margin-bottom: 20px;">
+                            <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">Öğrenci Ara</label>
+                            <div class="search-box" style="margin-bottom: 12px;">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <input type="text" id="fStudentSearch" placeholder="Öğrenci ismini veya soyismini yazın..." style="border: none; background: transparent; flex: 1; outline: none; font-size: 15px; width: 100%;">
+                            </div>
+                        </div>
+                        <div class="student-list" id="fStudentList" style="border: 1px solid var(--border-light); border-radius: 10px; max-height: 300px; overflow-y: auto; background: var(--bg-primary);">
+                            <!-- Auto-generated via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Meeting Details -->
+                    <div class="form-step hidden" id="form-step-3">
+                        <div class="field" style="margin-bottom: 24px;">
+                            <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;">Kiminle Görüşüldü?</label>
+                            <div class="chips" id="fMeetingWithChips" style="display: flex; flex-wrap: wrap; gap: 10px;">
+                                <!-- Chips here -->
+                            </div>
+                        </div>
+                        <div class="field" style="margin-bottom: 24px;">
+                            <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;">Nasıl Görüşüldü?</label>
+                            <div class="chips" id="fMeetingHowChips" style="display: flex; flex-wrap: wrap; gap: 10px;">
+                                <!-- Chips here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Notes & Submission -->
+                    <div class="form-step hidden" id="form-step-4">
+                        <div class="tags" id="fSummaryTags" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px;">
+                            <!-- Auto-generated via JS tags -->
+                        </div>
+                        <div class="field" style="margin-bottom: 20px;">
+                            <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">Görüşme İçeriği / Notlar</label>
+                            <textarea id="fNotes" placeholder="Görüşmede neler konuşuldu? Detaylı açıklayın..." style="width: 100%; min-height: 180px; padding: 16px; border-radius: 8px; border: 1px solid var(--border-light); font-size: 15px; outline: none; resize: vertical; background: var(--bg-primary); font-family: inherit; line-height: 1.5;"></textarea>
+                            <div class="char-count" id="fCharCount" style="font-size: 12px; margin-top: 8px; font-weight: 500;">0 karakter — en az 10</div>
+                        </div>
+                    </div>
+
+                    <!-- Form Navigation Footer -->
+                    <div class="step-nav" style="display: flex; align-items: center; justify-content: space-between; margin-top: 32px; border-top: 1px solid var(--border-light); padding-top: 20px;">
+                        <button class="secondary-button" id="fBtnPrev" style="visibility: hidden;">← Geri</button>
+                        <button class="primary-button" id="fBtnNext" disabled style="opacity: 0.5; cursor: not-allowed;">İleri →</button>
+                    </div>
+
+                </section>
+            </div>
+
+            <!-- Admin Data Management (Ekle/Çıkar) -->
+            <div class="dashboard-area tab-content hidden" id="tab-data-management">
+                <section class="data-section glass-panel" style="margin-top: 0; padding: 32px; max-width: 800px; margin-left: auto; margin-right: auto;">
+                    <div class="table-header" style="margin-bottom: 24px;">
+                        <h2><i class="fa-solid fa-database" style="color: var(--primary); margin-right: 8px;"></i> Veritabanı ve Kadro Yönetimi</h2>
+                    </div>
+                    <div style="background: var(--bg-color); padding: 20px; border-radius: 12px; margin-bottom: 24px; border: 1px solid var(--border-color);">
+                        <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 16px;">
+                            Sistemimiz %100 oranında Google Sheets bulut altyapısıyla entegre çalışmaktadır. Öğrenci veya Öğretmen ekleyip çıkarmak için doğrudan ilgili veritabanı (Excel) dosyalarında değişiklik yapmanız yeterlidir. Değişiklik yaptığınız an, bu kontrol paneli otomatik olarak güncellenecektir.
+                        </p>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                            <a href="https://docs.google.com/spreadsheets/d/1DXg2-lYxKyOa7IhZ4Z40kxR-7HJwbCrK6DN8zElAPCk/edit#gid=678203721" target="_blank" class="stat-card" style="text-decoration: none; cursor: pointer; border: 1px solid #E2E8F0; transition: all 0.2s;">
+                                <div class="stat-icon" style="background: #EFF6FF; color: #3B82F6; width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 12px;"><i class="fa-solid fa-user-graduate"></i></div>
+                                <h3 style="font-size: 16px; color: var(--text-color); margin-bottom: 8px;">Öğrenci Ekle / Çıkar</h3>
+                                <p style="font-size: 13px; color: var(--text-secondary);">362 Kişilik Master Öğrenci listesini açın ve yeni satır ekleyerek veya silerek listeyi güncelleyin.</p>
+                            </a>
+                            <a href="https://docs.google.com/spreadsheets/d/1DXg2-lYxKyOa7IhZ4Z40kxR-7HJwbCrK6DN8zElAPCk/edit#gid=2048085281" target="_blank" class="stat-card" style="text-decoration: none; cursor: pointer; border: 1px solid #E2E8F0; transition: all 0.2s;">
+                                <div class="stat-icon" style="background: #F0FDF4; color: #16A34A; width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 12px;"><i class="fa-solid fa-chalkboard-user"></i></div>
+                                <h3 style="font-size: 16px; color: var(--text-color); margin-bottom: 8px;">Görüşmeleri ve Öğretmenleri Yönet</h3>
+                                <p style="font-size: 13px; color: var(--text-secondary);">Görüşmeler Excel formunu açın. Silmek veya düzenlemek istediğiniz kayıtları buradan yönetebilirsiniz.</p>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+                        
+    </div>
+
+    <!-- Role Selection Modal -->
+    <div id="role-modal" class="modal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content glass-panel" style="max-width: 450px;">
+            <div class="modal-header">
+                <h2>Giriş Yap / Rol Seçin</h2>
+            </div>
+            <div class="modal-body">
+                <p style="color: var(--text-secondary); margin-bottom: 20px;">Lütfen sistemi hangi rolde görüntülemek istediğinizi seçin.</p>
+                
+                <div class="role-selector-container">
+                    <!-- Admin Option -->
+                    <div class="role-card" data-role="admin">
+                        <div class="role-icon" style="background: #EEF2FF; color: #4F46E5;"><i class="fa-solid fa-user-shield"></i></div>
+                        <div class="role-info">
+                            <h3>Yönetici (Admin)</h3>
+                            <p>Tüm öğretmenlerin kayıtlarını görür.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Teacher Option -->
+                    <div class="role-card" data-role="teacher">
+                        <div class="role-icon" style="background: #F0FDF4; color: #16A34A;"><i class="fa-solid fa-person-chalkboard"></i></div>
+                        <div class="role-info">
+                            <h3>Öğretmen</h3>
+                            <p>Sadece kendi kayıtlarını görür.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Teacher Select Dropdown (Hidden initially) -->
+                <div id="teacher-select-container" class="hidden" style="margin-top: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 500;">Hangi öğretmensiniz?</label>
+                    <select id="login-teacher-select" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-light); font-size: 15px;">
+                        <option value="">Lütfen seçin...</option>
+                        <!-- Loaded dynamically -->
+                    </select>
+                </div>
+                
+                <button class="primary-button" id="confirm-role-btn" style="margin-top: 20px; width: 100%;" disabled>Devam Et</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Details Modal -->
+    <div id="details-modal" class="modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content glass-panel">
+            <div class="modal-header">
+                <h2>Görüşme Detayları</h2>
+                <button class="close-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body" id="modal-details-body">
+                <!-- Data populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Script -->
+    <script src="app.js?v=3"></script>
+</body>
+</html>
