@@ -1081,6 +1081,41 @@ function renderUncontactedStudents() {
         `;
         elements.uncontactedTableBody.appendChild(tr);
     });
+
+    // İletişimsiz Öğrenciler: Excel Export
+    const exportBtn = document.getElementById('export-uncontacted-btn');
+    if (exportBtn) {
+        // Eski listener'ı silmek için butonu kopyalayıp değiştiriyoruz
+        const newBtn = exportBtn.cloneNode(true);
+        exportBtn.parentNode.replaceChild(newBtn, exportBtn);
+        newBtn.addEventListener('click', () => exportUncontactedToExcel(uncontacted, targetMonth));
+    }
+}
+
+/**
+ * İletişimsiz Öğrenciler Excel Çıktısı (SheetJS)
+ */
+function exportUncontactedToExcel(uncontactedList, targetMonth) {
+    if (typeof XLSX === 'undefined') {
+        alert("Excel dışa aktarma kütüphanesi yüklenemedi. Lütfen sayfayı yenileyip tekrar deneyin.");
+        return;
+    }
+
+    const exportData = uncontactedList.map(item => ({
+        "Öğrenci Adı": item.student,
+        "Durum": "Kayıtsız (İlgili Ayda Görüşülmemiş)"
+    }));
+
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(exportData);
+
+    ws['!cols'] = [
+        { wch: 30 }, // Öğrenci Adı
+        { wch: 40 }  // Durum
+    ];
+
+    XLSX.utils.book_append_sheet(wb, ws, "IletisimiOlmayanlar");
+    XLSX.writeFile(wb, `Iletisimi_Olmayan_Ogrenciler_${targetMonth}.xlsx`);
 }
 
 /**

@@ -189,8 +189,11 @@
                 <section class="data-section glass-panel" style="margin-top: 0;">
                     <div class="table-header">
                         <h2><i class="fa-solid fa-triangle-exclamation" style="color: #EF4444;"></i> İletişim Kurulmayan Öğrenciler (Seçili Ay)</h2>
-                        <div class="table-actions">
+                        <div class="table-actions" style="display: flex; align-items: center; gap: 12px;">
                             <span style="font-size: 13px; color: var(--text-secondary);">Bu liste filtrelenen ay içinde hakkında veri girilmemiş öğrencileri gösterir.</span>
+                            <button id="export-uncontacted-btn" class="export-btn" title="İletişimsiz Öğrencileri Excel Olarak İndir" style="padding: 6px 12px; font-size: 13px; height: 32px; flex-shrink: 0;">
+                                <i class="fa-solid fa-file-excel"></i> İndir
+                            </button>
                         </div>
                     </div>
                     <div class="table-responsive">
